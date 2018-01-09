@@ -1,0 +1,9 @@
+{
+  "name": "web-dev",
+  "version": "0.0.0",
+  "description": "WebDev",
+  "main": "server.js",
+  "author": {
+    "name": "Jerzy"
+  }
+}
