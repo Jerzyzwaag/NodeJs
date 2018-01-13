@@ -1,3 +1,4 @@
+//use all packages
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -7,15 +8,13 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var cors = require('cors')
 
-
+//define route location
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 //Models
 var User = require('./Models/User');
 
-//
-//protectedRoute = [requiresLogin];
 
 //Database(Mongoose)
 mongoose = require('mongoose');
@@ -45,10 +44,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'work hard', resave: true, saveUninitialized: false }));
 
+//apply routes
 app.use('/', index);
 app.use('/users', users);
-
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

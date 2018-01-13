@@ -11,13 +11,15 @@ router.post('/create', function (req, res, next) {
     if (req.body.email &&
         req.body.username &&
         req.body.password) {
+        //get schema
         User = mongoose.model('user');
 
         var userData = {
             email: req.body.email,
             username: req.body.username,
-            password: req.body.password,
+            password: req.body.password
         }
+        //use schema to create new user
         User.create(userData, function (err, user) {
             if (err) {
                 return next(err)
@@ -37,7 +39,9 @@ router.post('/create', function (req, res, next) {
 router.post('/login', function (req, res, next) {
     if (req.body.email &&
         req.body.password) {
+        //get schema
         User = mongoose.model('user');
+        //use schema static method
         User.authenticate(req.body.email, req.body.password, function (error, user) {
             if (error || !user) {
                 var err = new Error('Wrong email or password.');
@@ -77,13 +81,7 @@ router.get('/logout', function (req, res, next) {
 });
 
 router.get('/profile', middlewares.loginCheck, function (req, res, next) {
-   
     res.render('user/profile', { title: 'Profile', user: req.session.user, userid: req.session.user._id })
-
 });
-
-
-
-
 
 module.exports = router;
