@@ -28,9 +28,53 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="app.js" />
+    <Compile Include="Middleware\userAuth.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\User.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="routes\index.js" />
+    <Compile Include="routes\users.js" />
     <Compile Include="server.js" />
+    <Content Include="bin\www" />
+    <Content Include="package-lock.json" />
     <Content Include="package.json" />
+    <Content Include="public\stylesheets\style.css" />
     <Content Include="README.md" />
+    <Content Include="views\auth\login.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\auth\register.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\error.pug" />
+    <Content Include="views\includes\footer.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\includes\header.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\index.pug" />
+    <Content Include="views\layout.pug" />
+    <Content Include="views\user\profile.pug">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+    <Folder Include="Models\" />
+    <Folder Include="Middleware\" />
+    <Folder Include="public\" />
+    <Folder Include="public\images\" />
+    <Folder Include="public\javascripts\" />
+    <Folder Include="public\stylesheets\" />
+    <Folder Include="routes\" />
+    <Folder Include="views\" />
+    <Folder Include="views\includes\" />
+    <Folder Include="views\auth\" />
+    <Folder Include="views\user\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

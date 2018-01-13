@@ -1,0 +1,14 @@
+﻿extends ../layout
+
+block content
+    form(method='POST' action='/users/create')
+          div.form-group
+            label(for='username') Username:
+            input#username.form-control(type='text', placeholder='username' name='username')
+          div.form-group
+            label(for='email') Email:
+            input#email.form-control(type='email', placeholder='name@email.com' name='email')
+          div.form-group
+            label(for='pw') Password:
+            input#pw.form-control(type='password' name='password')
+          button.btn.btn-primary(type='submit') Register
