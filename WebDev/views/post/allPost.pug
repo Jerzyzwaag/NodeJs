@@ -5,6 +5,10 @@ block content
         a(href='/post/create') Make a post
     ul
         each post in posts
-            a(href="/post/"+ post.id) #{post.title}
+            ul
+               a(href="/post/"+ post.id) #{post.title} 
+               if userid==post.user_id
+                form.delete(method='POST' action="/post/delete/"+ post.id)
+                 button.btn.btn-primary(type='submit') delete
         else
             p there are no posts

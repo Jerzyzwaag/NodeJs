@@ -21,7 +21,7 @@ router.get('/create', middlewares.loginCheck, function (req, res, next) {
     res.render('post/createPost');
 });
 
-router.post('/create', middlewares.loginCheck,function (req, res, next) {
+router.post('/create', middlewares.loginCheck, function (req, res, next) {
     if (req.body.title &&
         req.body.content) {
         var post = mongoose.model('post');
@@ -30,7 +30,18 @@ router.post('/create', middlewares.loginCheck,function (req, res, next) {
             if (err) {
                 return next(err)
             } else {
-                return res.redirect('/'+post._id);
+                var user = mongoose.model('user');
+                user.findOneAndUpdate({
+                    _id: req.session.user._id
+                }, {
+                        $push: {
+                            posts: post._id
+                        }
+                    }, function (err, response) {
+                        console.log(response);
+
+                    });
+                return res.redirect('/post/' + post._id);
             }
         });
     } else {
@@ -39,7 +50,18 @@ router.post('/create', middlewares.loginCheck,function (req, res, next) {
         return next(err);
     }
 
-})
+});
+
+router.post('/delete/:id', function (req, res, next) {
+    console.log("deleting of post")
+    post = mongoose.model('post');
+    post.findOneAndRemove({ _id: req.params.id }, function (err, result) {
+        if (err) return err;
+        console.log(result);
+        res.redirect('/post');
+    });
+});
+
 router.get('/:id', function (req, res, next) {
    var post = mongoose.model('post');
     post.findById(req.params.id).exec(function (err, post) {
@@ -66,5 +88,6 @@ router.get('/:id', function (req, res, next) {
         //res.render('post/ViewPost', { title: post.title, post,creator })
     });
 });
+
 
 module.exports = router;
