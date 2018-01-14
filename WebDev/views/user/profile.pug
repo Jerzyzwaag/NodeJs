@@ -3,3 +3,13 @@
 block content
     p Username : #{user.username}
     p Email : #{user.email}
+    p Posts made:
+     each post in user.posts
+            ul
+               a(href="/post/"+ post.id) #{post.title} 
+               if userid==post.user_id
+                form.delete(method='POST' action="/post/delete/"+ post.id)
+                 button.btn.btn-primary(type='submit') delete
+     else
+        p you have made no posts
+        a(href='/post/create') Make a post

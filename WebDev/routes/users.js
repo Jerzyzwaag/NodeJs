@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var middlewares = require("../Middleware/userAuth");
 
+
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
@@ -11,14 +13,14 @@ router.post('/create', function (req, res, next) {
     if (req.body.email &&
         req.body.username &&
         req.body.password) {
-        //get schema
-        User = mongoose.model('user');
 
         var userData = {
             email: req.body.email,
             username: req.body.username,
             password: req.body.password
         }
+        //get schema
+        var User = mongoose.model('user');
         //use schema to create new user
         User.create(userData, function (err, user) {
             if (err) {
@@ -40,7 +42,7 @@ router.post('/login', function (req, res, next) {
     if (req.body.email &&
         req.body.password) {
         //get schema
-        User = mongoose.model('user');
+        var User = mongoose.model('user');
         //use schema static method
         User.authenticate(req.body.email, req.body.password, function (error, user) {
             if (error || !user) {
@@ -58,7 +60,7 @@ router.post('/login', function (req, res, next) {
         return next(err);
     }
 });
-    
+
 router.get('/create', function (req, res, next) {
     res.render('auth/register');
 });
@@ -81,7 +83,17 @@ router.get('/logout', function (req, res, next) {
 });
 
 router.get('/profile', middlewares.loginCheck, function (req, res, next) {
-    res.render('user/profile', { title: 'Profile', user: req.session.user, userid: req.session.user._id })
+    var User = mongoose.model('user');
+    User.findById(req.session.user._id).populate('posts').exec(function (err, user) {
+        if (err) {
+            return next(err)
+        } else if (!user) {
+            var err = new Error('Post not found.');
+            err.status = 401;
+            return next(err);
+        }
+        res.render('user/profile', { title: 'Profile', user: user, userid: req.session.user._id })
+    });
 });
 
 module.exports = router;

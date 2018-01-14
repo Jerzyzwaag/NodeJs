@@ -25,7 +25,7 @@ router.post('/create', middlewares.loginCheck, function (req, res, next) {
     if (req.body.title &&
         req.body.content) {
         var post = mongoose.model('post');
-        var postData = { title: req.body.title, content: req.body.title, user_id: req.session.user._id }
+        var postData = { title: req.body.title, content: req.body.title, user: req.session.user._id }
         post.create(postData, function (err, post) {
             if (err) {
                 return next(err)
@@ -51,8 +51,25 @@ router.post('/create', middlewares.loginCheck, function (req, res, next) {
     }
 
 });
+router.post('/update/:id', middlewares.loginCheck, function (req, res, next) {
+    if (req.body.title &&
+        req.body.content) {
+        var post = mongoose.model('post');
+        var postupdatedata = { title: req.body.title, content: req.body.content }
 
-router.post('/delete/:id', function (req, res, next) {
+        post.findByIdAndUpdate(req.params.id, { $set: { postupdatedata } }, { new: true }, function (err, post) {
+            console.log(post);
+            res.redirect('/post/' + post._id );
+        });
+            
+
+    } else {
+        var err = new Error('All fields have to be filled out');
+        err.status = 400;
+        return next(err);
+    }
+});
+router.post('/delete/:id', middlewares.loginCheck, function (req, res, next) {
     console.log("deleting of post")
     post = mongoose.model('post');
     post.findOneAndRemove({ _id: req.params.id }, function (err, result) {
@@ -64,7 +81,10 @@ router.post('/delete/:id', function (req, res, next) {
 
 router.get('/:id', function (req, res, next) {
    var post = mongoose.model('post');
-    post.findById(req.params.id).exec(function (err, post) {
+   post.findById(req.params.id)
+       //uses the id stored in user to populate a user object as defined in the schema
+       .populate('user')
+       .exec(function (err, post) {
         if (err) {
             return next(err)
         } else if (!post) {
@@ -72,20 +92,9 @@ router.get('/:id', function (req, res, next) {
             err.status = 401;
             return next(err);
         }
-        var creator;
-        var userModel = mongoose.model('user');
-        userModel.findById(post.user_id).exec(function (err, user) {
-            console.log("made it");
-            if (err) {
-                creator = err;
-            } else if (!user) {
-                creator = "empty";
-            }
-            console.log(user);
-            creator = user;
-            res.render('post/ViewPost', { title: post.title, post, creator })
-        })
-        //res.render('post/ViewPost', { title: post.title, post,creator })
+        console.log(post);
+        res.render('post/ViewPost', { title: post.title, post })
+       
     });
 });
 
