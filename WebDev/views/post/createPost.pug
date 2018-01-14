@@ -1,0 +1,11 @@
+﻿extends ../layout
+
+block content
+    form(method='POST' action='/post/create')
+          div.form-group
+            label(for='Title') Title:
+            input#Title.form-control(type='text', placeholder='Title' name='title')
+          div.form-group
+            label(for='Content') Content:
+            input#Content.form-control(type='Content', placeholder='Content' name='content')
+          button.btn.btn-primary(type='submit') Make Post

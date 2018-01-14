@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-middlewares = require("../Middleware/userAuth");
+var middlewares = require("../Middleware/userAuth");
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {

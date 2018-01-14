@@ -11,10 +11,10 @@ var cors = require('cors')
 //define route location
 var index = require('./routes/index');
 var users = require('./routes/users');
-
+var posts = require('./routes/post');
 //Models
 var User = require('./Models/User');
-
+var Post = require('./Models/Post');
 
 //Database(Mongoose)
 mongoose = require('mongoose');
@@ -47,6 +47,8 @@ app.use(session({ secret: 'work hard', resave: true, saveUninitialized: false })
 //apply routes
 app.use('/', index);
 app.use('/users', users);
+app.use('/post', posts);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

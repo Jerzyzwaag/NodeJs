@@ -9,7 +9,12 @@ router.get('/', function (req, res, next) {
         username = req.session.user.username;
         userid = req.session.user._id;
     }
-  res.render('index', { title: 'WebDev',username ,userid});
+    post = mongoose.model('post');
+    var allposts
+    post.find({}, function (err, posts) {
+        allposts = posts;
+    });
+  res.render('index', { title: 'WebDev',username ,userid,allposts});
 });
 
 module.exports = router;

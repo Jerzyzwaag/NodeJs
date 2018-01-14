@@ -1,0 +1,10 @@
+﻿extends ../layout
+
+block content
+    if userid
+        a(href='/post/create') Make a post
+    ul
+        each post in posts
+            a(href="/post/"+ post.id) #{post.title}
+        else
+            p there are no posts

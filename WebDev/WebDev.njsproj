@@ -32,10 +32,16 @@
     <Compile Include="Middleware\userAuth.js">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\Post.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\User.js">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="routes\index.js" />
+    <Compile Include="routes\post.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="routes\users.js" />
     <Compile Include="server.js" />
     <Content Include="bin\www" />
@@ -58,6 +64,15 @@
     </Content>
     <Content Include="views\index.pug" />
     <Content Include="views\layout.pug" />
+    <Content Include="views\post\allPost.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\post\createPost.pug">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\post\ViewPost.pug">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="views\user\profile.pug">
       <SubType>Code</SubType>
     </Content>
@@ -74,6 +89,7 @@
     <Folder Include="views\" />
     <Folder Include="views\includes\" />
     <Folder Include="views\auth\" />
+    <Folder Include="views\post\" />
     <Folder Include="views\user\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
