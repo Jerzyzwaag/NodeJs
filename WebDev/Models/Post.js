@@ -10,8 +10,8 @@ var postSchema = mongoose.Schema({
 
 postSchema.statics.retrieveById = function (id, callback) {
     post.findById(id).exec(function (err, post) {
-       var err = handleErr(err, post);
-        console.log(err);
+        var err = handleErr(err, post);
+        
         return callback(err, post);
     });
 };
@@ -27,16 +27,30 @@ postSchema.statics.RetrievePostAndUserById = function (id, callback) {
         });
 };
 
+postSchema.statics.HaveAuthorization = function (postid, userid, callback) {
+    post.findById(postid, function (err, post) {
+        var err = handleErr(err, post);
+        if (err) {
+            return callback(err, null);
+        }
+        if (post.user != userid) {
+            var autherr = new Error('No Authorization');
+            autherr.status = 403;
+            return callback(autherr, null);
+        } else {
+            return callback(err, post);
+        }
+    })
+}
 function handleErr(err, post) {
     if (err) {
         return err;
     } else if (!post) {
         var err = new Error('Post not found.');
         err.status = 401;
-        
         return err;
     }
-    return nulll;
+    return null;
 }
 
 

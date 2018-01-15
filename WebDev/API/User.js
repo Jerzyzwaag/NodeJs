@@ -21,7 +21,6 @@ router.post('/create', function (req, res, next) {
             if (err) {
                 return res.json(err)
             } else {
-                req.session.user = user;
                 return res.json({ message: 'Registration succesfull', user })
             }
         });
@@ -41,7 +40,6 @@ router.post('/login', function (req, res, next) {
         //use schema static method
         User.authenticate(req.body.email, req.body.password, function (err, user) {
             if (err || !user) {
-                var err = new Error('Wrong email or password.');
                 err.status = 401;
                 return res.json(err)
             }
@@ -77,7 +75,6 @@ router.get('/profile', middlewares.tokenCheck, function (req, res, next) {
         if (err) {
             return res.json(err)
         } else if (!user) {
-            var err = new Error('Post not found.');
             err.status = 401;
             return res.json(err)
         }

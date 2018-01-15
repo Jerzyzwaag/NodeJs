@@ -3,10 +3,7 @@ var router = express.Router();
 var middlewares = require("../Middleware/userAuth");
 
 router.get('/', function (req, res, next) {
-    var userid
-    if (req.decoded) {
-        userid = req.decoded.userid;
-    }
+
     post = mongoose.model('post');
     post.find({}, function (err, posts) {
         if (err) return res.json(err);
@@ -25,17 +22,14 @@ router.post('/create', middlewares.tokenCheck, function (req, res, next) {
             if (err) {
                 return res.json(err);
             } else {
-                console.log(post);
-            
                 var user = mongoose.model('user');
                 user.findByIdAndUpdate(userid,
                     {
+                        //push adds it to the array
                         $push: {
                             posts: post._id
                         }
                     }, function (err, response) {
-                        console.log(response);
-
                     });
                 return res.json(post);
             }
@@ -50,15 +44,19 @@ router.post('/create', middlewares.tokenCheck, function (req, res, next) {
 
 
 router.patch('/:id', middlewares.tokenCheck, function (req, res, next) {
-
     if (req.body.title &&
         req.body.content) {
         var post = mongoose.model('post');
-        var postupdatedata = { title: req.body.title, content: req.body.content }
-        console.log("postupdate");
-        post.findByIdAndUpdate(req.params.id, postupdatedata, { new: true }, function (err, post) {
+        //retrieve the userid from the token
+        var userid = req.decoded.userid;
+        post.HaveAuthorization(req.params.id, userid, function (err, post) {
             if (err) return res.json(err);
-            res.json(post);
+            var postupdatedata = { title: req.body.title, content: req.body.content }
+            post.set(postupdatedata);
+            post.save(function (err, updatedpost) {
+                if (err) return res.json(err)
+                res.json(updatedpost);
+            });
         });
     } else {
         var err = new Error('All fields have to be filled out');
@@ -66,14 +64,35 @@ router.patch('/:id', middlewares.tokenCheck, function (req, res, next) {
         return res.json(err);
     }
 });
+
 router.delete('/:id', middlewares.tokenCheck, function (req, res, next) {
-    console.log("deleting of post")
-    post = mongoose.model('post');
-    post.findByIdAndRemove(req.params.id, function (err, result) {
-        if (err) return res.json(err);
-        res.json(result);
+    var post = mongoose.model('post');
+    var user = mongoose.model('user');
+    //retrieve the userid from the token
+    var userid = req.decoded.userid;
+
+    post.HaveAuthorization(req.params.id, userid, function (err, post) {
+        if (err) {
+            return res.json(err);
+        } else {
+            //removes post from db
+            post.remove();
+            user.findById(post.user, function (err, user) {
+                if (err) return res.json(err);
+                //remove the post from the user posts
+                user.posts.pull(post._id);
+                user.save(function (err) {
+                    if (err) {
+                        res.json({ err, warning: 'Not all references removed' });
+                    }
+                    res.json(post);
+                });
+            });
+        }
     });
+    
 });
+
 
 router.get('/:id', function (req, res, next) {
     var post = mongoose.model('post');
