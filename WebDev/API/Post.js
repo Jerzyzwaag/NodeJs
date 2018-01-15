@@ -44,14 +44,17 @@ router.post('/create', middlewares.tokenCheck, function (req, res, next) {
 
 
 router.patch('/:id', middlewares.tokenCheck, function (req, res, next) {
-    if (req.body.title &&
+
+    if (req.body.title ||
         req.body.content) {
         var post = mongoose.model('post');
         //retrieve the userid from the token
         var userid = req.decoded.userid;
         post.HaveAuthorization(req.params.id, userid, function (err, post) {
             if (err) return res.json(err);
-            var postupdatedata = { title: req.body.title, content: req.body.content }
+            var postupdatedata = {}
+            if (req.body.title) { postupdatedata['title'] = req.body.title }
+            if (req.body.content) { postupdatedata['content'] = req.body.content }
             post.set(postupdatedata);
             post.save(function (err, updatedpost) {
                 if (err) return res.json(err)
@@ -59,7 +62,7 @@ router.patch('/:id', middlewares.tokenCheck, function (req, res, next) {
             });
         });
     } else {
-        var err = new Error('All fields have to be filled out');
+        var err = new Error('Need at least a field to be filled out');
         err.status = 400;
         return res.json(err);
     }

@@ -67,6 +67,30 @@ router.post('/login', function (req, res, next) {
     }
 });
 
+router.patch('/', middlewares.tokenCheck, function (req, res, next) {
+    if (req.body.email || req.body.username || req.body.password) {
+        userid = req.decoded.userid;
+        var updatedata = {}
+        if (req.body.email) {
+            updatedata['email'] = req.body.email;
+        }
+        if (req.body.username) {
+            updatedata['username'] = req.body.username;
+        }
+        if (req.body.password) {
+            updatedata['password'] = req.body.password;
+        }
+        var User = mongoose.model('user');
+        User.findByIdAndUpdate(userid, updatedata, { new: true }, function (err, updatedUser) {
+            if (err) return res.json(err);
+            return res.json(updatedUser);
+        })
+    } else {
+        return res.json({ message: "No valuse for updating" })
+    }
+});
+
+
 router.get('/profile', middlewares.tokenCheck, function (req, res, next) {
     userid = req.decoded.userid;
     var User = mongoose.model('user');
