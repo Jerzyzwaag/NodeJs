@@ -3,6 +3,13 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.postcontent >a{
+  text-decoration:none;
+  font-size:18px; 
+}
+
+.headerlinks > a {
+    color: black;
+    margin-left: 5px;
+    text-decoration: none;
 }

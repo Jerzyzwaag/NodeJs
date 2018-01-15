@@ -1,11 +1,12 @@
 ﻿.header
-    a(href='/') Home
-    a(href='/post') Posts
-    unless userid
-        a(href='/users/login') Login
-        a(href='/users/create') Register
-    if userid
-        a(href='/users/profile') Profile
-        a(href='/users/logout') Logout
-    if message
-        p #{message}
+    .headerlinks
+        a(href='/') Home
+        a(href='/post') Posts
+        unless userid
+            a(href='/users/login') Login
+            a(href='/users/create') Register
+        if userid
+            a(href='/users/userprofile') Profile
+            a(href='/users/logout') Logout
+        if message
+            p #{message}

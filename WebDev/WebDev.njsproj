@@ -28,6 +28,12 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="API\Post.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="API\User.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app.js" />
     <Compile Include="Middleware\userAuth.js">
       <SubType>Code</SubType>
@@ -70,6 +76,9 @@
     <Content Include="views\post\createPost.pug">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="views\post\editPost.pug">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="views\post\ViewPost.pug">
       <SubType>Code</SubType>
     </Content>
@@ -81,6 +90,7 @@
     <Folder Include="bin\" />
     <Folder Include="Models\" />
     <Folder Include="Middleware\" />
+    <Folder Include="API\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />

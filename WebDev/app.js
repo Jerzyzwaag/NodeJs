@@ -7,11 +7,16 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var cors = require('cors')
+var jwt = require('jsonwebtoken');
+
 
 //define route location
 var index = require('./routes/index');
 var users = require('./routes/users');
 var posts = require('./routes/post');
+//define api route location
+var apiusers = require('./API/User');
+var apiposts = require('./API/Post');
 //Models
 var User = require('./Models/User');
 var Post = require('./Models/Post');
@@ -29,6 +34,7 @@ db.once('open', function () {
 mongoose.Promise = global.Promise;
 
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -48,8 +54,11 @@ app.use(session({ secret: 'work hard', resave: true, saveUninitialized: false })
 app.use('/', index);
 app.use('/users', users);
 app.use('/post', posts);
+//apply api routes
+app.use('/api/users', apiusers);
+app.use('/api/post', apiposts);
 
-
+app.set('superSecret', 'Hail Hydra');
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 

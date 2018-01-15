@@ -18,7 +18,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/create', middlewares.loginCheck, function (req, res, next) {
     //res.json('hey you here?');
-    res.render('post/createPost');
+    res.render('post/createPost', { title: 'Make a post' });
 });
 
 router.post('/create', middlewares.loginCheck, function (req, res, next) {
@@ -51,18 +51,29 @@ router.post('/create', middlewares.loginCheck, function (req, res, next) {
     }
 
 });
+
+router.get('/update/:id', middlewares.loginCheck, function (req, res, next) {
+    var post = mongoose.model('post');
+    post.retrieveById(req.params.id, function (err, post) {
+        
+        if (err || !post) return err
+        res.render('post/editPost', { title: 'Editing your post', post, userid: req.session.user._id })
+    })
+   
+});
+
 router.post('/update/:id', middlewares.loginCheck, function (req, res, next) {
+  
     if (req.body.title &&
         req.body.content) {
         var post = mongoose.model('post');
         var postupdatedata = { title: req.body.title, content: req.body.content }
-
-        post.findByIdAndUpdate(req.params.id, { $set: { postupdatedata } }, { new: true }, function (err, post) {
+        console.log("postupdate");
+        post.findByIdAndUpdate(req.params.id,  postupdatedata, { new: true }, function (err, post) {
+            if (err) return next(err);
             console.log(post);
             res.redirect('/post/' + post._id );
         });
-            
-
     } else {
         var err = new Error('All fields have to be filled out');
         err.status = 400;
@@ -73,28 +84,16 @@ router.post('/delete/:id', middlewares.loginCheck, function (req, res, next) {
     console.log("deleting of post")
     post = mongoose.model('post');
     post.findOneAndRemove({ _id: req.params.id }, function (err, result) {
-        if (err) return err;
-        console.log(result);
+        if (err) return next(err);
         res.redirect('/post');
     });
 });
 
 router.get('/:id', function (req, res, next) {
-   var post = mongoose.model('post');
-   post.findById(req.params.id)
-       //uses the id stored in user to populate a user object as defined in the schema
-       .populate('user')
-       .exec(function (err, post) {
-        if (err) {
-            return next(err)
-        } else if (!post) {
-            var err = new Error('Post not found.');
-            err.status = 401;
-            return next(err);
-        }
-        console.log(post);
+    var post = mongoose.model('post');
+    post.RetrievePostAndUserById(req.params.id, function (err, post) {
+        if (err || !post) next(err);
         res.render('post/ViewPost', { title: post.title, post })
-       
     });
 });
 
